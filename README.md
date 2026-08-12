@@ -1,3 +1,3 @@
 # git_test
-OTP
-Hello Odin !
+RAG Project
+va chercher ce biff fils !
