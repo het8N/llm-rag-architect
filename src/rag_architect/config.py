@@ -1,11 +1,13 @@
-from enum import Enum
-from pathlib import Path
-from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from enum import StrEnum
 from functools import lru_cache
 
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class Environment(str, Enum):
+
+class Environment(StrEnum):
+    """Environnement de déploiement."""
+
     DEVELOPMENT = "development"
     STAGING = "staging"
     PRODUCTION = "production"
@@ -16,9 +18,10 @@ class Settings(BaseSettings):
     Configuration globale de l'application.
     Validation stricte au démarrage (Fail-Fast).
     """
+
     app_name: str = Field(default="LLM-RAG-Architect")
     environment: Environment = Field(default=Environment.DEVELOPMENT)
-    
+
     # Base de données vectorielle
     qdrant_host: str = Field(default="localhost")
     qdrant_port: int = Field(default=6333)
@@ -30,11 +33,11 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        extra="ignore"
+        extra="ignore",
     )
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """
     Crée l'instance Settings une seule fois et la met en cache.

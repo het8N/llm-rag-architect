@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environnements
+.venv/
+.env
+.env.*
+!.env.example
+
+# Caches d'outils
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Données (PDF sources : lourds, potentiellement redistribuables sous conditions)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# macOS
+.DS_Store
