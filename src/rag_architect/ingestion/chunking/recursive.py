@@ -44,6 +44,13 @@ ROW_RE = re.compile(r"<tr>.*?</tr>", re.S)
 # exactly the same separator or every citation drifts by two characters a page.
 PAGE_SEPARATOR = "\n\n"
 
+# Page furniture -- a bare page number, a running footer like "- 43 -" -- comes
+# out of extraction as its own tiny fragment. It can never answer a question,
+# but it can surface on a query containing a number, so it is dropped rather
+# than indexed. Three letters is enough to keep any real sentence, and HTML
+# table fragments always clear the bar through their own tags.
+MIN_ALPHA_CHARACTERS = 3
+
 
 @dataclass(frozen=True)
 class _Piece:
@@ -117,7 +124,7 @@ class RecursiveTokenChunker:
 
         chunks: list[Chunk] = []
         for piece in pieces:
-            if not piece.text.strip():
+            if not self._is_indexable(piece.text):
                 continue
             page_start = pages.page_at(piece.char_start)
             page_end = pages.page_at(max(piece.char_end - 1, piece.char_start))
@@ -134,6 +141,11 @@ class RecursiveTokenChunker:
                 )
             )
         return chunks
+
+    @staticmethod
+    def _is_indexable(text: str) -> bool:
+        """Reject page furniture: fragments carrying no readable words."""
+        return sum(1 for character in text if character.isalpha()) >= MIN_ALPHA_CHARACTERS
 
     # ------------------------------------------------------------ segmenting
 

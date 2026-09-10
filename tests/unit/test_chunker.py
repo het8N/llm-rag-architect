@@ -176,3 +176,27 @@ class TestIdentity:
         chunks = chunker.split(document)
 
         assert all(c.content_hash == document.content_hash for c in chunks)
+
+
+class TestPageFurniture:
+    """Bare page numbers and running footers must never reach the index."""
+
+    @pytest.mark.parametrize("furniture", ["26", "- 43 -", "  \n 12 \n ", "..."])
+    def test_furniture_is_dropped(self, chunker, furniture):
+        chunks = chunker.split(make_document(f"A real sentence with words.\n\n{furniture}"))
+
+        assert all(furniture.strip() != c.text.strip() for c in chunks)
+
+    def test_short_but_real_sentences_survive(self, chunker):
+        chunks = chunker.split(make_document("Net debt rose."))
+
+        assert len(chunks) == 1
+        assert chunks[0].text.strip() == "Net debt rose."
+
+    def test_a_numeric_table_fragment_is_kept(self, chunker):
+        """HTML tags carry letters, so a table of pure figures still qualifies."""
+        table = "<table><tr><th>2024</th></tr><tr><td>221,293</td></tr></table>"
+        chunks = chunker.split(make_document(table))
+
+        assert len(chunks) == 1
+        assert "221,293" in chunks[0].text
