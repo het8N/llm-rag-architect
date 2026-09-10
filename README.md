@@ -36,10 +36,10 @@ weight of broadcasting rights, and how player trading is accounted for.
 | Manchester United plc, FY2025 (Form 20-F) | 157 | SEC EDGAR | native |
 | Deloitte Annual Review of Football Finance 2026 | 56 | Deloitte | native |
 
-The PDFs are not committed — they are 22 MB and freely available from the
-sources above. Filings retrieved from Companies House arrive as scanned TIFFs
-wrapped in a PDF (`producer: libtiff / tiff2pdf`, zero extractable characters)
-and were OCR'd once, ahead of ingestion:
+The PDFs are not committed: 22 MB of filings that belong to their publishers.
+Those retrieved from Companies House arrive as scanned TIFFs wrapped in a PDF
+(`producer: libtiff / tiff2pdf`, zero extractable characters) and were OCR'd
+once, ahead of ingestion:
 
 ```bash
 ocrmypdf --language eng --deskew input.pdf output-ocr.pdf
